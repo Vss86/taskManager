@@ -1,72 +1,71 @@
-import React, {useState} from 'react'
-import {doc, updateDoc} from 'firebase/firestore';
-import {db} from '../services/firebase.config'
+import React, { useState } from 'react'
+import { doc, updateDoc } from 'firebase/firestore'
+import { db } from '../services/firebase.config'
 
+const EditTask = ({ task, id }) => {
 
-const EditTask = ({task, id}) => {
+  const [tasks, setTasks] = useState([task])
 
-  console.log(task, id);
-
-  const [updatedTask, setUpdatedTask] = useState([task]);
 
   const updateTask = async (e) => {
-    e.preventDefault();
-
+    e.preventDefault()
+    console.log(tasks)
     try {
       const taskDocument = doc(db, "tasks", id);
-      await updateDoc(taskDocument, 
-        {
-          task: updatedTask,
-          isChecked: false
-        })
-        window.location.reload()
+      await updateDoc(taskDocument, {
+        task: tasks
+      });
+      window.location.reload();
     } catch (err) {
       console.log(err);
-    }   
+    }
   }
-
 
   return (
     <>
-    <button type="button" className="btn btn-primary" 
-    data-bs-toggle="modal" data-bs-target="#updateTask">
-      Update Task
-    </button>
-            {/* Modal */}
-    <div className="modal fade" id="addTask" tabIndex="-1" 
-    aria-labelledby="addTaskLabel" aria-hidden="true">
-  <div className="modal-dialog">
-    <form className="d-flex">
-    <div className="modal-content">
-      <div className="modal-header">
-        <h1 className="modal-title fs-5" id="addTaskLabel">Update Task</h1>
-        <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div className="modal-body">
-
-        
-        <input 
-        type="text" 
-        className="form-control" 
-        placeholder="Add a Task" 
-        defaultValue={updatedTask}
-        onChange={(e) => setUpdatedTask(e.target.value)}
-        />
-      
-
-      </div>
-      <div className="modal-footer">
-        <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button 
-        type="submit" 
+      <button
+        type="button"
         className="btn btn-primary"
-        onClick={e => updateTask(e)}
-        >Update task</button>
+        data-bs-toggle="modal"
+        data-bs-target={`#id${id}`}      >
+        Edit Task
+      </button>
+
+      <div
+        className="modal fade"
+        id={`id${id}`}
+        tabIndex="-1"
+        aria-labelledby="editLabel"
+        aria-hidden="true">
+        <div className="modal-dialog">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h5 className="modal-title" id="editLabel">Update Task Details</h5>
+              <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div className="modal-body">
+
+              <form className="d-flex">
+                <input
+                  type="text"
+                  className="form-control"
+                  defaultValue={tasks}
+                  onChange={e => setTasks(e.target.value)}
+                />
+              </form>
+
+            </div>
+            <div className="modal-footer">
+              <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <button
+                type="button"
+                className="btn btn-primary"
+                onClick={e => updateTask(e)}
+              >Update Tasks</button>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
-    </form>
-  </div>
-</div>
     </>
   )
 }
