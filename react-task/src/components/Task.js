@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react'
 import { addDoc, collection, deleteDoc, doc, getDocs} from 'firebase/firestore'
 import {db} from '../services/firebase.config'
+import EditTask from './EditTask'
 
 const Task = () => {
 
@@ -37,17 +38,16 @@ const Task = () => {
     }
 
     const deleteTask = async(id) => { 
-    
-        try {
-            window.confirm("Are you sure you want to delete this task?")
-            console.log(id);
-            const documentRef = doc(db, "tasks", id)
-            await deleteDoc(documentRef)
-            window.location.reload()
-        } catch (err) {
-            console.log(err);
-        } 
+        const confirmDelete = window.confirm("Are you sure you want to delete this task?");
+        if (confirmDelete) {
+            try {
+                // code to remove the task from the database
+            } catch (err) {
+                console.log(err);
+            }
         }
+    }
+    
 
   return (
     <>        
@@ -73,7 +73,7 @@ const Task = () => {
                                         &nbsp;{task}
                                     </span>
                                     <span className="float-end mx3">
-                                        <button type="button" className="btn btn-primary float-end mx-3">Edit</button>
+                                        <EditTask task={task} id={id}/>
                                     </span>
 
                                     <button 
@@ -96,7 +96,7 @@ const Task = () => {
     <form onSubmit={submitTask} className="d-flex">
     <div className="modal-content">
       <div className="modal-header">
-        <h1 className="modal-title fs-5" id="addTaskLabel">Modal title</h1>
+        <h1 className="modal-title fs-5" id="addTaskLabel">Add Task</h1>
         <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div className="modal-body">
